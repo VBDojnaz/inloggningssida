@@ -2,12 +2,15 @@ const username = "sara";
 const password = "qwe123";
 const app = document.getElementById("app");
 
+// En funktion för att kunna se om användaren är inloggad just nu
 function isLoggedin() {
   return localStorage.getItem("loggedin") ? true : false;
 }
+// En funktion för att kunna hämta användarnamnet på den som är inloggad
 function getUsername() {
   return localStorage.getItem("loggedin");
 }
+// En funktion för att validera användarens inloggningsuppgifter
 function login() {
   const usernameField = document.getElementById("username");
   const passwordField = document.getElementById("password");
@@ -17,17 +20,22 @@ function login() {
     passwordField &&
     passwordField.value == password
   ) {
+    // Om uppgifterna stämmer, så loggas användaren in, och ett meddelande visas att de är inloggade. 
     localStorage.setItem("loggedin", usernameField.value);
     return render({ success: "Välkommen, du är nu inloggad" });
   }
+  // Om uppgifterna inte stämmer, så visas ett meddelade att deras uppgifter inte är giltliga. 
   render({ error: "Ogiltliga inloggningsuppgifter" });
 }
+// En funktion för att logga ut användaren
 function logout() {
   localStorage.removeItem("loggedin");
   render({ info: "Du har nu blivit utloggad!" });
 }
 
+// Denna funktionen är ansvarig för att visa sidan för användaren. Varje gång något ändras på sidan måste denna funktion köras.
 function render(data = {}) {
+  // I vissa fall har vi fått data från en funktion att det är något använderan måste veta om. Då finns det 3 olika färger de kan visas på
   const { error, info, success } = data;
   app.innerHTML = `
 <nav class="navbar">
@@ -43,8 +51,8 @@ function render(data = {}) {
       <h1 class="title">Välkommen till Atlantis Simsällskap</h1>
       <p class="subtitle">Här kan du hitta information om oss, samt hantera till medlemskap</p>
     </div>
-    
     ${
+      // Om det finns ett "success" meddelande att visa, så renderas det här
       success
         ? `
       <div class="card p-6 my-6 has-background-success-light">
@@ -54,6 +62,7 @@ function render(data = {}) {
         : ""
     }
     ${
+      // Om det finns ett "info" meddelande att visa, så renderas det här
       info
         ? `
       <div class="card p-6 my-6 has-background-info-light">
@@ -63,6 +72,7 @@ function render(data = {}) {
         : ""
     }
     ${
+      // Om det finns ett "error" meddelande att visa, så renderas det här
       error
         ? `
       <div class="card p-6 my-6 has-background-danger-light">
@@ -73,6 +83,7 @@ function render(data = {}) {
     }
 
     ${
+      // Här kollar vi om användaren är inloggad. Om personen är det så visas medlemssidan, annars bes användaren att logga in
       isLoggedin()
         ? `
       <div class="card p-6 my-6">
@@ -120,4 +131,5 @@ function render(data = {}) {
 `;
 }
 
+// När sidan laddas in vill vi att sidan ska renderas en gång direkt. 
 render();
